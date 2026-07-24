@@ -10,7 +10,7 @@ from PIL import Image
 # =========================================================
 CLASS_NAMES = ["fire", "normal", "smoke"]  # urutan sesuai output notebook (cek "Classes: [...]")
 NUM_CLASSES = len(CLASS_NAMES)
-MODEL_PATH = "model_resnet50_augmented.pth" 
+MODEL_PATH = "model_efficientnet_b0_baseline.pth"
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
@@ -19,8 +19,8 @@ DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 # =========================================================
 @st.cache_resource
 def load_model():
-    model = torchvision.models.resnet50(weights=None)  # weights=None, karena mau load bobot sendiri
-    model.fc = nn.Linear(model.fc.in_features, NUM_CLASSES)
+    model = torchvision.models.efficientnet_b0(weights=None)  # weights=None, karena mau load bobot sendiri
+    model.classifier[1] = nn.Linear(model.classifier[1].in_features, NUM_CLASSES)
     model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
     model.to(DEVICE)
     model.eval()
